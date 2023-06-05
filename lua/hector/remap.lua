@@ -1,5 +1,5 @@
 vim.g.mapleader = " "
-vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
+vim.keymap.set("n", "<leader>,", vim.cmd.Ex)
 
 -- Vistual-select blocks of code and move them around with respect to brackets
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
@@ -25,6 +25,3 @@ vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 
 -- Replace the word that you are currently on
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
-
--- Close Quickfix
-vim.keymap.set("n", "<C-d>", "<cmd>cclose<CR>")
