@@ -41,6 +41,8 @@ vim ~/.config/nvim/lua/hector/remap.lua
 ```
 <space><space> - Opens telescope to observe all files within the current directory and below
 
+<space> + q - Open Vim dir view
+
 Visual mode + J - Moves selected blocks Down
 Visual mode + K - Moves selected blocks Up
 
@@ -54,6 +56,4 @@ Visual mode + K - Moves selected blocks Up
 # Harpoon
 <space> + a - Harpoons a file
 <C-e> - Harpoon toggle menu
-<C-h> - Harpoon item before
-<C-t> - Harpoon item after
 ```
