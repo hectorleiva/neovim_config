@@ -20,6 +20,9 @@ cmp.setup({
     mapping = cmp_mappings
 })
 
+--Format on save
+vim.cmd([[autocmd BufWritePre * lua vim.lsp.buf.format()]])
+
 lsp.on_attach(function(client, bufnr)
     local opts = { buffer = bufnr, remap = false }
 
@@ -33,6 +36,14 @@ lsp.on_attach(function(client, bufnr)
     vim.keymap.set("n", "gr", function() vim.lsp.buf.references() end, opts)
     vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
     vim.keymap.set("n", "<leader>h", function() vim.lsp.buf.signature_help() end, opts)
+    vim.keymap.set("n", "<leader>f", function() vim.lsp.buf.format() end, opts)
+
+    if (client.name == "eslint") then
+        vim.api.nvim_create_autocmd("BufWritePre", {
+            pattern = { "*.ts", "*.tsx", "*.js", "*.jsx" },
+            command = "EslintFixAll"
+        })
+    end
 end)
 
 lsp.setup()
