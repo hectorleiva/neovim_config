@@ -1,5 +1,5 @@
 vim.g.mapleader = " "
-vim.keymap.set("n", "<leader>q", vim.cmd.Ex)
+--vim.keymap.set("n", "<leader>q", vim.cmd("Ex"))
 
 -- Vistual-select blocks of code and move them around with respect to brackets
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
@@ -10,12 +10,12 @@ vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
 -- Preserve copied buffer while pasting it elsewhere
-vim.keymap.set("x", "<leader>p", "\"_dp")
+vim.keymap.set("x", "<leader>p", '"_dp')
 
 -- Yank to the system clipboard
-vim.keymap.set("n", "<leader>y", "\"+y")
-vim.keymap.set("v", "<leader>y", "\"+y")
-vim.keymap.set("n", "<leader>Y", "\"+Y")
+vim.keymap.set("n", "<leader>y", '"+y')
+vim.keymap.set("v", "<leader>y", '"+y')
+vim.keymap.set("n", "<leader>Y", '"+Y')
 
 -- Quick fix list
 vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")

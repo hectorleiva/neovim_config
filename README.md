@@ -6,36 +6,31 @@ brew install neovim
 ```
 
 Ubuntu
+
+Make sure neovim 0.9.x is installed
+
 ```bash
-sudo apt install neovim
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+chmod u+x nvim.appimage
+./nvim.appimage
 ```
 
-https://github.com/wbthomason/packer.nvim#quickstart
-```bash
-git clone --depth 1 https://github.com/wbthomason/packer.nvim\
- ~/.local/share/nvim/site/pack/packer/start/packer.nvim
-```
+Install patched fonts from here:
+https://www.nerdfonts.com/font-downloads
+- Symbols Nerd Font
+- Hack Nerd Font
 
 ## Setup
 
 ```bash
 mkdir -p ~/.config/nvim
 git clone --depth 1 https://github.com/hectorleiva/neovim_config ~/.config/nvim
-vim ~/.config/nvim/lua/hector/packer.lua
 ```
-
-`packer.lua`
-
-```bash
-:PackerSync
-```
-
-- Restart `vim` to test.
 
 ## Current Keymappings
 
 ```bash
-vim ~/.config/nvim/lua/hector/remap.lua
+vim ~/.config/nvim/lua/hector/core/remap.lua
 ```
 
 ```

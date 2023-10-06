@@ -1,1 +1,2 @@
-require("hector")
+require("hector.core")
+require("hector.lazy")
