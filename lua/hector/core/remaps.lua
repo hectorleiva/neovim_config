@@ -41,3 +41,13 @@ vim.keymap.set("v", "<S-tab>", "<gv")
 --Firefox VimTab Navigation
 vim.keymap.set("n", "<C-S-tab>", ":tabprevious")
 vim.keymap.set("n", "<C-tab>", ":tabnext")
+--
+--Split Navigation
+vim.keymap.set("n", "<C-h>", "<C-w>h")
+vim.keymap.set("n", "<C-j>", "<C-w>j")
+vim.keymap.set("n", "<C-k>", "<C-w>k")
+vim.keymap.set("n", "<C-l>", "<C-w>l")
+
+--Jump between Nvim tabs
+--vim.keymap.set("n", "gt", "]b")
+--vim.keymap.set("n", "gT", "[b")
