@@ -1,6 +1,7 @@
 ## Pre
 
 MacOS
+
 ```bash
 brew install neovim
 ```
@@ -17,6 +18,7 @@ chmod u+x nvim.appimage
 
 Install patched fonts from here:
 https://www.nerdfonts.com/font-downloads
+
 - Symbols Nerd Font
 - Hack Nerd Font
 
@@ -49,6 +51,7 @@ Visual mode + K - Moves selected blocks Up
 <space> + s - Replace word you're currently on
 
 # Harpoon
-<space> + a - Harpoons a file
-<C-e> - Harpoon toggle menu
+<leader>hm - Harpoons a file
+<leader>hp - Jump to prev harpooned file
+<leader>hn - Jump to next harpooned file
 ```
