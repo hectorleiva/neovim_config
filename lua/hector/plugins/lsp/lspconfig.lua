@@ -82,6 +82,12 @@ return {
 			on_attach = on_attach,
 		})
 
+		-- configure haskell server with plugin
+		lspconfig["hls"].setup({
+			capabilities = capabilities,
+			on_attach = on_attach,
+		})
+
 		-- configure css server
 		lspconfig["cssls"].setup({
 			capabilities = capabilities,
