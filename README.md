@@ -55,4 +55,7 @@ Visual mode + K - Moves selected blocks Up
 <leader>hm - Harpoons a file
 <leader>hp - Jump to prev harpooned file
 <leader>hn - Jump to next harpooned file
+
+# Diagnostics
+<F8> - Pull up the list of issues
 ```
