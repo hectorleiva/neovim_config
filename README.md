@@ -38,7 +38,8 @@ vim ~/.config/nvim/lua/hector/core/remap.lua
 ```
 <space><space> - Opens telescope to observe all files within the current directory and below
 
-<space> + q - Open Vim dir view
+<space>t - Neovim Tree
+<space>tt - Open current file in relation to neovim tree
 
 Visual mode + J - Moves selected blocks Down
 Visual mode + K - Moves selected blocks Up
