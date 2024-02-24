@@ -16,6 +16,12 @@ return {
 				highlight = {
 					enable = true,
 				},
+				textobjects = {
+					move = {
+						enable = true,
+						set_jumps = true,
+					},
+				},
 				-- enable indentation
 				indent = { enable = true },
 				-- enable autotagging (w/ nvim-ts-autotag plugin)
@@ -25,6 +31,7 @@ return {
 				-- ensure these language parsers are installed
 				ensure_installed = {
 					"c",
+					"go",
 					"json",
 					"javascript",
 					"typescript",
