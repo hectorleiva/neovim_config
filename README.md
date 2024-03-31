@@ -14,6 +14,13 @@ Make sure neovim 0.9.x is installed
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
 chmod u+x nvim.appimage
 ./nvim.appimage
+mkdir -p /opt/nvim
+mv nvim.appimage /opt/nvim/nvim
+```
+
+Within `~/.bashrc`:
+```bash
+export PATH="$PATH:/opt/nvim/"
 ```
 
 Install patched fonts from here:
@@ -26,7 +33,7 @@ https://www.nerdfonts.com/font-downloads
 
 ```bash
 mkdir -p ~/.config/nvim
-git clone --depth 1 https://github.com/hectorleiva/neovim_config ~/.config/nvim
+git clone --depth 1 git@github.com:hectorleiva/neovim_config.git ~/.config/nvim
 ```
 
 ## Current Keymappings
