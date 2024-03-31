@@ -1,14 +1,16 @@
-## Pre
+# Pre
 
-MacOS
+## MacOS
 
 ```bash
 brew install neovim
 ```
 
-Ubuntu
+## Ubuntu
 
-Make sure neovim 0.9.x is installed
+### Install NeoViM
+
+Make sure neovim `0.9.x` is installed by doing the following:
 
 ```bash
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
@@ -18,10 +20,15 @@ mkdir -p /opt/nvim
 mv nvim.appimage /opt/nvim/nvim
 ```
 
-Within `~/.bashrc`:
+### Update ~/.bashrc or ~/.zshrc
+
+Within `~/.bashrc` or `~/.zshrc`:
+
 ```bash
 export PATH="$PATH:/opt/nvim/"
 ```
+
+### Update Fonts
 
 Install patched fonts from here:
 https://www.nerdfonts.com/font-downloads
@@ -29,14 +36,18 @@ https://www.nerdfonts.com/font-downloads
 - Symbols Nerd Font
 - Hack Nerd Font
 
-## Setup
+### Node.js must be set-up on the host machine for lsp to work
+
+I'm using `nvim` to install Node.js on my host machine using the following script: https://github.com/nvm-sh/nvm?tab=readme-ov-file#install--update-script
+
+# Setup
 
 ```bash
 mkdir -p ~/.config/nvim
 git clone --depth 1 git@github.com:hectorleiva/neovim_config.git ~/.config/nvim
 ```
 
-## Current Keymappings
+# Current Keymappings
 
 ```bash
 vim ~/.config/nvim/lua/hector/core/remap.lua
