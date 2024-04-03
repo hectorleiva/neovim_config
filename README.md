@@ -45,6 +45,7 @@ I'm using `nvim` to install Node.js on my host machine using the following scrip
 ```bash
 mkdir -p ~/.config/nvim
 git clone --depth 1 git@github.com:hectorleiva/neovim_config.git ~/.config/nvim
+sudo apt install ripgrep # for telescope live_grep to work
 ```
 
 # Current Keymappings
