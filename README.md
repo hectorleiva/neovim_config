@@ -20,6 +20,12 @@ mkdir -p /opt/nvim
 mv nvim.appimage /opt/nvim/nvim
 ```
 
+### Python package installation
+
+```bash
+pip install -U nginx-language-server
+```
+
 ### Update ~/.bashrc or ~/.zshrc
 
 Within `~/.bashrc` or `~/.zshrc`:
