@@ -26,6 +26,12 @@ mv nvim.appimage /opt/nvim/nvim
 pip install -U nginx-language-server
 ```
 
+### Additional packages
+
+```bash
+sudo apt install xclip # for clipboard usage
+```
+
 ### Update ~/.bashrc or ~/.zshrc
 
 Within `~/.bashrc` or `~/.zshrc`:
