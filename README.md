@@ -52,6 +52,12 @@ https://www.nerdfonts.com/font-downloads
 
 I'm using `nvim` to install Node.js on my host machine using the following script: https://github.com/nvm-sh/nvm?tab=readme-ov-file#install--update-script
 
+### Additional Global NPM Packages
+
+```bash
+npm i -g vscode-langservers-extracted # for eslint to automatically work
+```
+
 # Setup
 
 ```bash

@@ -89,6 +89,18 @@ return {
 			root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json"),
 		})
 
+		-- configure eslint
+		lspconfig["eslint"].setup({
+			capabilities = capabilities,
+			on_attach = function(_, bufnr)
+				vim.api.nvim_create_autocmd("BufWritePre", {
+					buffer = bufnr,
+					command = "EslintFixAll",
+				})
+			end,
+			root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json"),
+		})
+
 		-- configure haskell server with plugin
 		lspconfig["hls"].setup({
 			capabilities = capabilities,
