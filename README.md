@@ -66,6 +66,16 @@ git clone --depth 1 git@github.com:hectorleiva/neovim_config.git ~/.config/nvim
 sudo apt install ripgrep # for telescope live_grep to work
 ```
 
+## Github Copilot
+
+Run the following within neovim:
+
+```bash
+:Copilot setup
+```
+
+and follow the instructions which will include the need to login into Github and to enter the device code presented.
+
 # Current Keymappings
 
 ```bash
