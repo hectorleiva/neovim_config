@@ -29,11 +29,13 @@ pip install -U nginx-language-server
 ### Additional packages
 
 #### Clipboard support
+
 ```bash
 sudo apt install xclip # for clipboard usage
 ```
 
 #### LazyGit
+
 https://github.com/jesseduffield/lazygit?tab=readme-ov-file#ubuntu
 
 ```bash
@@ -93,7 +95,7 @@ and follow the instructions which will include the need to login into Github and
 vim ~/.config/nvim/lua/hector/core/remap.lua
 ```
 
-```
+```bash
 <space><space> - Opens telescope to observe all files within the current directory and below
 
 <space>t - Neovim Tree
@@ -116,4 +118,12 @@ Visual mode + K - Moves selected blocks Up
 
 # Diagnostics
 <F8> - Pull up the list of issues
+```
+
+# Keep packages up-to-date
+
+Within a ViM session:
+
+```bash
+:Lazy
 ```
