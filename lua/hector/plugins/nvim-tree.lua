@@ -55,7 +55,7 @@ return {
 		keymap.set("n", "<leader>tt", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle file explorer" }) -- toggle file explorer
 		keymap.set(
 			"n",
-			"<leader>tf",
+			"<leader>ft",
 			"<cmd>NvimTreeFindFile<CR>",
 			{ desc = "Move the cursor in the tree for the current buffer" }
 		)
