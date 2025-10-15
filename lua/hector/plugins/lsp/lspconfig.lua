@@ -7,7 +7,8 @@ return {
 	},
 	config = function()
 		-- import lspconfig plugin
-		local lspconfig = require("lspconfig")
+		local util = require("lspconfig.util")
+		local buf = vim.lsp.buf
 
 		-- import cmp-nvim-lsp plugin
 		local cmp_nvim_lsp = require("cmp_nvim_lsp")
@@ -23,7 +24,7 @@ return {
 			keymap.set("n", "gr", "<cmd>Telescope lsp_references<CR>", opts) -- show definition, references
 
 			opts.desc = "Go to declaration"
-			keymap.set("n", "gD", vim.lsp.buf.declaration, opts) -- go to declaration
+			keymap.set("n", "gD", buf.declaration, opts) -- go to declaration
 
 			opts.desc = "Show LSP definitions"
 			keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts) -- show lsp definitions
@@ -35,7 +36,7 @@ return {
 			keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts) -- show lsp type definitions
 
 			opts.desc = "See available code actions"
-			keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts) -- see available code actions, in visual mode will apply to selection
+			keymap.set({ "n", "v" }, "<leader>ca", buf.code_action, opts) -- see available code actions, in visual mode will apply to selection
 
 			opts.desc = "Smart rename"
 			keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts) -- smart rename
@@ -70,27 +71,31 @@ return {
 			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 		end
 
+		local base = { capabilities = capabilities, on_attach = on_attach }
+
 		-- configure html server
-		lspconfig["html"].setup({
-			capabilities = capabilities,
-			on_attach = on_attach,
-		})
+		vim.lsp.config("html", base)
 
 		-- configure c server
-		lspconfig["clangd"].setup({
-			capabilities = capabilities,
-			on_attach = on_attach,
-		})
+		vim.lsp.config("clangd", base)
 
 		-- configure typescript server with plugin
-		lspconfig["ts_ls"].setup({
+		vim.lsp.config("ts_ls", {
 			capabilities = capabilities,
 			on_attach = on_attach,
-			root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json"),
+			root_markers = {
+				"package.json",
+				"tsconfig.json",
+				"jsconfig.json",
+				"yarn.lock",
+				".git",
+				"package-lock.json",
+			},
+			filetypes = { "typescript" },
 		})
 
 		-- configure eslint
-		lspconfig["eslint"].setup({
+		vim.lsp.config("eslint", {
 			capabilities = capabilities,
 			on_attach = function(_, bufnr)
 				vim.api.nvim_create_autocmd("BufWritePre", {
@@ -98,29 +103,29 @@ return {
 					command = "EslintFixAll",
 				})
 			end,
-			root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json"),
+			root_dir = util.root_pattern("package.json", "tsconfig.json", "jsconfig.json"),
 		})
 
 		-- configure haskell server with plugin
-		lspconfig["hls"].setup({
+		vim.lsp.config("hls", {
 			capabilities = capabilities,
 			on_attach = on_attach,
 		})
 
 		-- configure css server
-		lspconfig["cssls"].setup({
+		vim.lsp.config("cssls", {
 			capabilities = capabilities,
 			on_attach = on_attach,
 		})
 
 		-- configure tailwindcss server
-		lspconfig["tailwindcss"].setup({
+		vim.lsp.config("tailwindcss", {
 			capabilities = capabilities,
 			on_attach = on_attach,
 		})
 
 		-- configure svelte server
-		lspconfig["svelte"].setup({
+		vim.lsp.config("svelte", {
 			capabilities = capabilities,
 			on_attach = function(client, bufnr)
 				on_attach(client, bufnr)
@@ -137,38 +142,38 @@ return {
 		})
 
 		-- configure prisma orm server
-		lspconfig["prismals"].setup({
+		vim.lsp.config("prismals", {
 			capabilities = capabilities,
 			on_attach = on_attach,
 		})
 
 		-- configure graphql language server
-		lspconfig["graphql"].setup({
+		vim.lsp.config("graphql", {
 			capabilities = capabilities,
 			on_attach = on_attach,
 			filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
 		})
 
 		-- configure emmet language server
-		lspconfig["emmet_ls"].setup({
+		vim.lsp.config("emmet_ls", {
 			capabilities = capabilities,
 			on_attach = on_attach,
 			filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte" },
 		})
 
 		-- configure python server
-		lspconfig["pyright"].setup({
+		vim.lsp.config("pyright", {
 			capabilities = capabilities,
 			on_attach = on_attach,
 		})
 
-		lspconfig["nginx_language_server"].setup({
+		vim.lsp.config("nginx_language_server", {
 			capabilities = capabilities,
 			on_attach = on_attach,
 		})
 
 		-- configure lua server (with special settings)
-		lspconfig["lua_ls"].setup({
+		vim.lsp.config("lua_ls", {
 			capabilities = capabilities,
 			on_attach = on_attach,
 			settings = { -- custom settings for lua

@@ -13,7 +13,7 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({ { import = "hector.plugins" }, { import = "hector.plugins.lsp" } }, {
 	install = {
-		colorscheme = { "cyberdream" },
+		colorscheme = { "tokyonight" },
 	},
 	checker = {
 		enabled = true,

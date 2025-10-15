@@ -37,7 +37,8 @@ return {
 			-- auto-install configured servers (with lspconfig)
 			handlers = {
 				function(server_name)
-					require("lspconfig")[server_name].setup({})
+					vim.lsp.config(server_name, {})
+					vim.lsp.enable(server_name)
 				end,
 			},
 		})
