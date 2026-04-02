@@ -1,4 +1,13 @@
-# Pre
+# Quick Install
+
+Checks your system and attempts to install neovim + additional programs to make the dependencies work better (e.g. telescope)
+
+```bash
+git clone --depth 1 git@github.com:hectorleiva/neovim_config.git ~/.config/nvim
+./install.sh
+```
+
+# Pre - manual installations
 
 ## MacOS
 

@@ -1,76 +1,199 @@
 #!/bin/bash
 
-OS=$(uname -s)
+set -e
 
-if [[ $OS == "Darwin" ]]; then
-    printf "Setting up nvim directory at ~/.config/nvim"
-    mkdir -p ~/.config/nvim
+# ── helpers ───────────────────────────────────────────────────────────────────
 
-    printf "Copying over the neovim_config files/folders from github using git clone"
-    git clone --depth 1 git@github.com:hectorleiva/neovim_config.git ~/.config/nvim
+command_exists() { command -v "$1" &> /dev/null; }
 
-    if command -v brew &> /dev/null; then
-        printf "Installing neovim using brew"
-        brew install neovim
+ask_yes_no() {
+    local answer
+    read -rp "$1 (y/n) " answer
+    [[ "$answer" == "y" || "$answer" == "Y" ]]
+}
 
-        read -p "Install nginx-language-server via pip? (y/n) " installNginxLanguageServerAnswer
-        if [[ $installNginxLanguageServerAnswer == "y" || $installNginxLanguageServerAnswer == "Y" ]]; then
-            if command -v pip &> /dev/null; then
-                pip install -U nginx-language-server
-            else
-                printf "You can install nginx-language-server using pip by following the instructions in the README.md"
-            fi
-        fi
+info() { printf '\n[INFO] %s\n' "$*"; }
+warn() { printf '\n[WARN] %s\n' "$*"; }
+die()  { printf '\n[ERROR] %s\n' "$*" >&2; exit 1; }
 
+# ── prerequisites ─────────────────────────────────────────────────────────────
+
+check_prerequisites() {
+    command_exists git  || die "git is required but not installed."
+    command_exists curl || die "curl is required but not installed."
+}
+
+# ── config clone ──────────────────────────────────────────────────────────────
+
+clone_nvim_config() {
+    local dest="$HOME/.config/nvim"
+
+    if [[ -d "$dest/.nvim_installed" ]]; then
+        info "Neovim config already present at $dest — skipping clone."
+        return
+    fi
+
+    if [[ -d "$dest" && -n "$(ls -A "$dest" 2>/dev/null)" ]]; then
+        warn "$dest exists and is non-empty. Skipping clone to avoid overwriting."
+        return
+    fi
+
+    info "Cloning neovim config into $dest"
+    mkdir -p "$HOME/.config"
+    git clone --depth 1 git@github.com:hectorleiva/neovim_config.git "$dest"
+}
+
+# ── macOS ─────────────────────────────────────────────────────────────────────
+
+install_on_macos() {
+    command_exists brew || die "Homebrew must be installed first. See https://brew.sh"
+
+    if command_exists nvim; then
+        info "neovim is already installed ($(nvim --version | head -1)) — skipping."
     else
-        printf "homebrew needs to be installed prior to installing all the neovim dependencies. Please review the README.md for more information."
+        info "Installing neovim via brew"
+        brew install neovim
     fi
 
-    printf "Open neovim using 'neovim' and run ':Lazy' and install all the packages defined in ~/.config/nvim"
-    printf "I recommend to add 'alias vim=neovim' in your '~/.bashrc' or '~/.zshrc' file"
-elif [[ $OS == "Linux" ]]; then
-    cd /tmp
-
-    printf "Downloading the latest release from https://github.com/neovim/neovim/releases/latest/download/nvim.appimage into /tmp"
-
-    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-
-    printf "Changing permissions on nvim.appimage"
-    chmod u+x nvim.appimage
-    ./nvim.appimage
-
-    printf "Creating the /opt/nvim directory and moving nvim.appimage into it"
-    mkdir -p /opt/nvim
-    mv nvim.appimage /opt/nvim/nvim
-
-    read -p "Install ripgrep for telescope live_grep to work? (y/n) " installRipGrepAnswer
-    if [[ $installRipGrepAnswer == "y" || $installRipGrepAnswer == "Y" ]]; then
-        sudo apt install ripgrep
+    if ask_yes_no "Install nginx-language-server via pip?"; then
+        if command_exists nginx-language-server; then
+            info "nginx-language-server is already installed — skipping."
+        elif command_exists pip3; then
+            pip3 install -U nginx-language-server
+        elif command_exists pip; then
+            pip install -U nginx-language-server
+        else
+            warn "pip not found. Install nginx-language-server manually after installing Python/pip."
+        fi
     fi
 
-    read -p "Install lazygit? (y/n) " installLazyGitAnswer
-    if [[ $installLazyGitAnswer == "y" || $installLazyGitAnswer == "Y" ]]; then
-        LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+    info "Open neovim with 'nvim' and run ':Lazy' to install plugins."
+    info "Consider adding:  alias vim=nvim  to your ~/.zshrc or ~/.bashrc"
 
-        printf "Installing lazygit at version: $LAZYGIT_VERSION"
+    touch .nvim_installed
+}
 
-        curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
-        tar xf lazygit.tar.gz lazygit
-        sudo install lazygit /usr/local/bin
+# ── Linux ─────────────────────────────────────────────────────────────────────
+
+detect_pkg_manager() {
+    if command_exists apt-get; then echo apt
+    elif command_exists dnf;   then echo dnf
+    elif command_exists yum;   then echo yum
+    elif command_exists pacman; then echo pacman
+    elif command_exists zypper; then echo zypper
+    else echo ""
+    fi
+}
+
+pkg_install() {
+    local pkg="$1"
+    case "$(detect_pkg_manager)" in
+        apt)    sudo apt-get install -y "$pkg" ;;
+        dnf)    sudo dnf install -y "$pkg" ;;
+        yum)    sudo yum install -y "$pkg" ;;
+        pacman) sudo pacman -S --noconfirm "$pkg" ;;
+        zypper) sudo zypper install -y "$pkg" ;;
+        *)      die "No supported package manager found. Install '$pkg' manually." ;;
+    esac
+}
+
+detect_arch() {
+    case "$(uname -m)" in
+        x86_64)        echo "x86_64" ;;
+        aarch64|arm64) echo "arm64" ;;
+        *)             die "Unsupported architecture: $(uname -m)" ;;
+    esac
+}
+
+install_nvim_linux() {
+    if command_exists nvim; then
+        info "neovim is already installed ($(nvim --version | head -1)) — skipping."
+        return
     fi
 
-    read -p "Install xclip? (y/n) " installXClipAnswer
-    if [[ $installXClipAnswer == "y" || $installXClipAnswer == "Y" ]]; then
-        printf "Installing xclip for clipboard support inside neovim"
-        sudo apt install xclip
+    local arch
+    arch=$(detect_arch)
+    local appimage="nvim-linux-${arch}.appimage"
+    local tmp
+    tmp=$(mktemp -d)
+
+    info "Downloading neovim AppImage ($arch) into $tmp"
+    curl -L --progress-bar \
+        "https://github.com/neovim/neovim/releases/latest/download/${appimage}" \
+        -o "$tmp/nvim.appimage"
+    chmod u+x "$tmp/nvim.appimage"
+
+    info "Installing neovim to /opt/nvim/nvim"
+    sudo mkdir -p /opt/nvim
+    sudo mv "$tmp/nvim.appimage" /opt/nvim/nvim
+    rm -rf "$tmp"
+
+    info "Add the following to your ~/.bashrc or ~/.zshrc if not already present:"
+    printf '\n    export PATH="$PATH:/opt/nvim/"\n\n'
+}
+
+install_lazygit_linux() {
+    if command_exists lazygit; then
+        info "lazygit is already installed — skipping."
+        return
     fi
 
-    printf "
-        Insert the following into your ~/.bashrc or ~/.zshrc file if you have not done so already
+    local arch
+    arch=$(detect_arch)
+    local version
+    version=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" \
+        | grep -Po '"tag_name": "v\K[^"]*')
+    [[ -n "$version" ]] || die "Could not determine the latest lazygit version."
 
-        export PATH=\"\$PATH:/opt/nvim/\"
-    "
-else
-    printf "Your OS does not support this installation method at this time."
-fi
+    info "Installing lazygit v${version} (${arch})"
+    local tmp
+    tmp=$(mktemp -d)
+    curl -L --progress-bar \
+        "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${version}_Linux_${arch}.tar.gz" \
+        -o "$tmp/lazygit.tar.gz"
+    tar -C "$tmp" -xf "$tmp/lazygit.tar.gz" lazygit
+    sudo install "$tmp/lazygit" /usr/local/bin/lazygit
+    rm -rf "$tmp"
+}
 
+install_on_linux() {
+    install_nvim_linux
+
+    if ask_yes_no "Install ripgrep (needed for Telescope live_grep)?"; then
+        if command_exists rg; then
+            info "ripgrep is already installed — skipping."
+        else
+            pkg_install ripgrep
+        fi
+    fi
+
+    if ask_yes_no "Install lazygit?"; then
+        install_lazygit_linux
+    fi
+
+    if ask_yes_no "Install xclip (clipboard support in neovim)?"; then
+        if command_exists xclip; then
+            info "xclip is already installed — skipping."
+        else
+            pkg_install xclip
+        fi
+    fi
+
+    info "Open neovim with 'nvim' and run ':Lazy' to install plugins."
+    touch .nvim_installed
+}
+
+# ── main ──────────────────────────────────────────────────────────────────────
+
+main() {
+    check_prerequisites
+    clone_nvim_config
+
+    case "$(uname -s)" in
+        Darwin) install_on_macos ;;
+        Linux)  install_on_linux ;;
+        *)      die "Unsupported OS: $(uname -s)" ;;
+    esac
+}
+
+main "$@"
