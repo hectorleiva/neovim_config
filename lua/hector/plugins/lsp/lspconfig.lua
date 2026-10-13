@@ -91,7 +91,7 @@ return {
 				".git",
 				"package-lock.json",
 			},
-			filetypes = { "typescript" },
+			filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
 		})
 
 		-- configure eslint
@@ -185,9 +185,13 @@ return {
 					workspace = {
 						-- make language server aware of runtime files
 						library = {
-							[vim.fn.expand("$VIMRUNTIME/lua")] = true,
-							[vim.fn.stdpath("config") .. "/lua"] = true,
+							vim.fn.expand("$VIMRUNTIME/lua"),
+							vim.fn.stdpath("config") .. "/lua",
+							-- type definitions for vim.uv / vim.loop (libuv)
+							"${3rd}/luv/library",
 						},
+						-- don't prompt to "configure your work environment"
+						checkThirdParty = false,
 					},
 				},
 			},
